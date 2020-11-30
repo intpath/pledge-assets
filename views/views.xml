@@ -28,6 +28,7 @@
           <field name="issuing_bank_ref"/>
            <field name="attachement"/>
           </group>
+          
          
          <group>
           <field name="note"/>
