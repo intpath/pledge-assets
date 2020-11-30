@@ -1,0 +1,132 @@
+<odoo>
+  <data>
+    <!-- explicit list view definition -->
+
+    <record model="ir.ui.view" id="pledge_assets.form">
+      <field name="name">pledge_assets form</field>
+      <field name="model">pledge.pledge</field>
+      <field name="arch" type="xml">
+        <form>
+        <sheet>
+         <group>
+
+         <group>
+          <field name="partner_id"/>
+          <field name="issuing_bank_name"/>
+          <field name="issuing_date"/>
+          <field name="expiration_date"/>
+          </group>
+    
+         <group>
+          <field name="alert_date"/>
+          <field name="acceptance_date"/>
+          <field name="status"/>
+          </group>
+         
+
+         <group>
+          <field name="issuing_bank_ref"/>
+           <field name="attachement"/>
+          </group>
+         
+         <group>
+          <field name="note"/>
+          </group>
+
+         </group>
+          </sheet>
+        </form>
+      </field>
+    </record>
+
+
+    <record model="ir.ui.view" id="pledge_assets.tree">
+      <field name="name">pledge_assets tree</field>
+      <field name="model">pledge.pledge</field>
+      <field name="arch" type="xml">
+        <tree string="Tree View">
+        
+          <field name="partner_id"/>
+          <field name="issuing_bank_name"/>
+          <field name="issuing_date"/>
+         
+          <field name="expiration_date"/>
+          <field name="alert_date"/>
+         <field name="issuing_bank_ref"/>
+          <field name="attachement"/>
+
+        </tree>
+      </field>
+    </record>
+
+
+
+<record id="lc_bank_form" model="ir.ui.view">
+  <field name="name">lc_bank_form</field>
+  <field name="model">pledge.bank</field>
+  <field name="arch" type="xml">
+    <form string="Form View Name">
+                <sheet>
+        <field name="bank_name"/>
+        </sheet>
+    </form>
+  </field>
+</record>
+  
+  <record id="lc_bank_tree" model="ir.ui.view">
+  <field name="name">lc_bank_tree</field>
+  <field name="model">pledge.bank</field>
+  <field name="arch" type="xml">
+    <tree string="tree View Name">
+        <field name="bank_name"/>
+    </tree>
+  </field>
+</record>
+    <!-- actions opening views on models -->
+
+    <record model="ir.actions.act_window" id="pledge_assets.pledge_window">
+      <field name="name">Pledges</field>
+      <field name="res_model">pledge.pledge</field>
+      <field name="view_mode">tree,form</field>
+    </record>
+
+    <record model="ir.actions.act_window" id="pledge_assets.bank_window">
+      <field name="name">Banks</field>
+      <field name="res_model">pledge.bank</field>
+      <field name="view_mode">tree,form</field>
+    </record>
+
+    <!-- server action to the one above -->
+<!--
+    <record model="ir.actions.server" id="pledge_assets.action_server">
+      <field name="name">pledge_assets server</field>
+      <field name="model_id" ref="model_pledge_assets_pledge_assets"/>
+      <field name="state">code</field>
+      <field name="code">
+        action = {
+          "type": "ir.actions.act_window",
+          "view_mode": "tree,form",
+          "res_model": model._name,
+        }
+      </field>
+    </record>
+-->
+
+    <!-- Top menu item -->
+
+    <menuitem name="Pledges" id="pledge_assets.menu_root" web_icon="pledge_assets,static/description/icon.png" action="pledge_assets.pledge_window"/>
+
+    <!-- menu categories -->
+
+    <!-- <menuitem name="LC Bank menu" id="pledge_assets.menu_1" parent="pledge_assets.menu_root" action="pledge.pledge_window"/> -->
+    <menuitem name="Banks" id="pledge_assets.bank_menu" parent="pledge_assets.menu_root" action="pledge_assets.bank_window"/>
+
+    <!-- actions -->
+<!--
+    <menuitem name="List" id="pledge_assets.menu_1_list" parent="pledge_assets.menu_1"
+              action="pledge_assets.action_window"/>
+    <menuitem name="Server to list" id="pledge_assets" parent="pledge_assets.menu_2"
+              action="pledge_assets.action_server"/>
+-->
+  </data>
+</odoo>
