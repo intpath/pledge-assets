@@ -1,0 +1,81 @@
+<odoo>
+    <data>
+
+
+                <record model="ir.ui.view" id="pledge_assets.form">
+                <field name="name">pledge_assets form</field>
+                <field name="model">pledge.pledge</field>
+                <field name="arch" type="xml">
+                    
+                    <form>
+                    <header>
+                        <button name="confirm" type="object" string="Confirm" attrs="{'invisible': [('status', '!=', 'draft')]}"/>
+                        <button name="clear_lc" type="object" string="Clear" attrs="{'invisible': ['|',('status', '=', 'draft'),('status', '=', 'cleared')]}"/>
+                    </header>
+                    <sheet>
+                    <h3><field name="name" placeholder="Name"/></h3>
+                    <group>
+                    <group>
+                    <field name="partner_id" attrs="{'readonly': [('status', '!=', 'draft')]}"/>
+                    <field name="bid_ref" attrs="{'readonly': [('status', '!=', 'draft')]}"/>
+                    <field name="lc_type" attrs="{'readonly': [('status', '!=', 'draft')]}"/>
+                    <field name="performance_bond_type" attrs="{'invisible': [('lc_type', '!=', 'performance bond')],'readonly': [('status', '!=', 'draft')]}" />
+                    <field name="payment_method" attrs="{'invisible': [('lc_type', '=', 'bid bond')],'readonly': [('status', '!=', 'draft')]}" />
+                    <field name="issuing_bank_name" attrs="{'invisible': [('payment_method', '=', 'cash')],'readonly': [('status', '!=', 'draft')]}"  />
+                    <field name="amount" attrs="{'readonly': [('status', '!=', 'draft')]}"/>
+                    <field name="status" />
+                    
+                    </group>
+                
+                    <group>
+                    <!-- <field name="alert_date" /> -->
+                    <field name="acceptance_date"   />
+                    <field name="status" invisible="1"/>
+                    </group>
+                    <group>
+                    <field name="issuing_bank_ref" attrs="{'readonly': [('status', '!=', 'draft')]}" />
+                    <field name="attachment_ids" widget="many2many_binary" class="oe_inline" attrs="{'readonly': [('status', '!=', 'draft')]}" />
+                    <button name="re_confirm" type="object" string="extend" attrs="{'invisible': [('status', '!=', 'expired')]}" confirm="You are about to reconfirm an expired pledge, please make sure the date is correct, this step is irreversible"/>
+                    </group>
+                    
+                    
+                    <group>
+                    <field name="notes"/>
+                    </group>
+                    <field name="validity_lines" attrs="{'readonly': [('status', '=', 'cleared')]}">
+                        <tree editable="top">
+                            <field name="issuing_date"/>
+                            <field name="expiration_date"/>
+
+                        </tree>
+
+                    </field>
+
+                    </group>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers" groups="base.group_user"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
+                    </form>
+                </field>
+                </record>
+
+
+
+
+                <record model="ir.ui.view" id="pledge_assets.tree">
+                <field name="name">pledge_assets tree</field>
+                <field name="model">pledge.pledge</field>
+                <field name="arch" type="xml">
+                    <tree string="Tree View">
+                    
+                    <field name="partner_id"/>
+                    <field name="issuing_bank_name"/>
+                    <!-- <field name="alert_date"/> -->
+                    <field name="issuing_bank_ref"/>
+                    </tree>
+                </field>
+                </record>
+    </data>
+</odoo>

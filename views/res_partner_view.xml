@@ -1,0 +1,25 @@
+<odoo>
+    <data>
+
+        <record id="pledge_res_form" model="ir.ui.view">
+            <field name="name">pledge_res_form</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_partner_form" />
+            <field name="arch" type="xml">
+                <xpath expr="//page[@name='internal_notes']" position="after">
+                    <page name="pledges" string="Pledges">
+                    <field name="pledges_ids" readonly="1"  >
+                        <tree decoration-danger="status=='expired'" decoration-success="status=='confirmed'" delete="false" >
+                            <field name="name"/>
+                            <field name="lc_type"/>
+                            <field name="issuing_bank_name"/>
+                            <field name="status"/>
+                        </tree>
+                    </field>
+                    </page>
+                </xpath>
+            </field>
+        </record>
+    </data>
+
+</odoo>
