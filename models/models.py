@@ -25,11 +25,11 @@ class Pledge_pledge(models.Model):
     notes = fields.Text()
     attachment_ids = fields.Many2many('ir.attachment', string='Attachments')
     name=fields.Char(store=True,compute="calc_name")
-    lc_type = fields.Selection([('bid bond', 'Bid Bond'),('performance bond','Performance Bond'),('letter of credit','Letter of Credit')])
+    lca_type = fields.Selection([('bid bond', 'Bid Bond'),('performance bond','Performance Bond'),('letter of credit','Letter of Credit')],string="Pledge Type")
     payment_method = fields.Selection([('cash', 'Cash'),('bank','Bank')]) 
     amount = fields.Float(string="Amount")
     validity_lines = fields.One2many("pledge.extension","conn",string="Validity/Extension",required=True)
-    performance_bond_type =fields.Selection([('customer', 'Customer Performance Bond'),('vendor','Vendor Performance Bond')],string="Performance Bond Type")
+    lc_type =fields.Selection([('customer', 'Customer LC'),('vendor','Vendor LC')],string="Letter of Credit Type")
     
     def re_confirm(self):
 

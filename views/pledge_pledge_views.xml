@@ -18,9 +18,9 @@
                     <group>
                     <field name="partner_id" attrs="{'readonly': [('status', '!=', 'draft')]}"/>
                     <field name="bid_ref" attrs="{'readonly': [('status', '!=', 'draft')]}"/>
-                    <field name="lc_type" attrs="{'readonly': [('status', '!=', 'draft')]}"/>
-                    <field name="performance_bond_type" attrs="{'invisible': [('lc_type', '!=', 'performance bond')],'readonly': [('status', '!=', 'draft')]}" />
-                    <field name="payment_method" attrs="{'invisible': [('lc_type', '=', 'bid bond')],'readonly': [('status', '!=', 'draft')]}" />
+                    <field name="lca_type" attrs="{'readonly': [('status', '!=', 'draft')]}"/>
+                    <field name="lc_type" attrs="{'invisible': [('lca_type', '!=', 'letter of credit')],'readonly': [('status', '!=', 'draft')]}" />
+                    <field name="payment_method" attrs="{'invisible': [('lca_type', '=', 'bid bond')],'readonly': [('status', '!=', 'draft')]}" />
                     <field name="issuing_bank_name" attrs="{'invisible': [('payment_method', '=', 'cash')],'readonly': [('status', '!=', 'draft')]}"  />
                     <field name="amount" attrs="{'readonly': [('status', '!=', 'draft')]}"/>
                     <field name="status" />
