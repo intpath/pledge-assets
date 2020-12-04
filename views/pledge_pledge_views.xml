@@ -6,11 +6,12 @@
                 <field name="name">pledge_assets form</field>
                 <field name="model">pledge.pledge</field>
                 <field name="arch" type="xml">
-                    
                     <form>
                     <header>
-                        <button name="confirm" type="object" string="Confirm" attrs="{'invisible': [('status', '!=', 'draft')]}"/>
-                        <button name="clear_lc" type="object" string="Clear" attrs="{'invisible': ['|',('status', '=', 'draft'),('status', '=', 'cleared')]}"/>
+                        <button name="confirm" type="object" string="Confirm" attrs="{'invisible': [('status', '!=', 'draft')]}" confirm="You will not be able to delete this record after confirmation"/>
+                        <button name="reset_draft" type="object" string="Reset to draft" attrs="{'invisible': [('status', '!=', 'confirmed')]}" confirm="Are you sure you want to reset this record to draft "/>
+                        <button name="clear_lc" type="object" string="Clear" attrs="{'invisible': ['|',('status', '=', 'draft'),('status', '=', 'cleared')]}" confirm="Are you sure you want to clear this record"/>
+                        <field name="status" widget="statusbar" statusbar_visible="draft,confirmed,expired,cleared"/>
                     </header>
                     <sheet>
                     <h3><field name="name" placeholder="Name"/></h3>
@@ -23,14 +24,14 @@
                     <field name="payment_method" attrs="{'invisible': [('lca_type', '=', 'bid bond')],'readonly': [('status', '!=', 'draft')]}" />
                     <field name="issuing_bank_name" attrs="{'invisible': [('payment_method', '=', 'cash')],'readonly': [('status', '!=', 'draft')]}"  />
                     <field name="amount" attrs="{'readonly': [('status', '!=', 'draft')]}"/>
-                    <field name="status" />
+                   
                     
                     </group>
                 
                     <group>
                     <!-- <field name="alert_date" /> -->
                     <field name="acceptance_date"   />
-                    <field name="status" invisible="1"/>
+                    <!-- <field name="status" invisible="1"/> -->
                     </group>
                     <group>
                     <field name="issuing_bank_ref" attrs="{'readonly': [('status', '!=', 'draft')]}" />
@@ -40,9 +41,9 @@
                     
                     
                     <group>
-                    <field name="notes"/>
+                    
                     </group>
-                    <field name="validity_lines" attrs="{'readonly': [('status', '=', 'cleared')]}">
+                    <field name="validity_lines" attrs="{'readonly': [('status', '=', 'cleared')]}" >
                         <tree editable="top">
                             <field name="issuing_date"/>
                             <field name="expiration_date"/>
@@ -52,6 +53,7 @@
                     </field>
 
                     </group>
+                    <field name="notes"/>
                     </sheet>
                     <div class="oe_chatter">
                         <field name="message_follower_ids" widget="mail_followers" groups="base.group_user"/>
@@ -71,9 +73,14 @@
                     <tree string="Tree View">
                     
                     <field name="partner_id"/>
+                    <field name="bid_ref"/>
                     <field name="issuing_bank_name"/>
+                    <field name="lca_type"/>
                     <!-- <field name="alert_date"/> -->
                     <field name="issuing_bank_ref"/>
+                    <field name="lc_type"/>
+                    <field name="amount"/>
+
                     </tree>
                 </field>
                 </record>

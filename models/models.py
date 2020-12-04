@@ -4,6 +4,8 @@ from odoo import models, fields, api, _
 from odoo.exceptions import UserError
 import datetime
 
+""" main record (pledge) class """
+
 class Pledge_pledge(models.Model):
     _name = 'pledge.pledge'
     _rec_name = "name"
@@ -25,14 +27,27 @@ class Pledge_pledge(models.Model):
     notes = fields.Text()
     attachment_ids = fields.Many2many('ir.attachment', string='Attachments')
     name=fields.Char(store=True,compute="calc_name")
-    lca_type = fields.Selection([('bid bond', 'Bid Bond'),('performance bond','Performance Bond'),('letter of credit','Letter of Credit')],string="Pledge Type")
+    lca_type = fields.Selection([('bid bond', 'Bid Bond'),('performance bond','Performance Bond'),('letter of credit','Letter of Credit')],string="Pledge Type") #main document type
     payment_method = fields.Selection([('cash', 'Cash'),('bank','Bank')]) 
     amount = fields.Float(string="Amount")
-    validity_lines = fields.One2many("pledge.extension","conn",string="Validity/Extension",required=True)
-    lc_type =fields.Selection([('customer', 'Customer LC'),('vendor','Vendor LC')],string="Letter of Credit Type")
+    validity_lines = fields.One2many("pledge.extension","conn",string="Validity/Extension")
+    lc_type =fields.Selection([('customer', 'Customer LC'),('vendor','Vendor LC')],string="Letter of Credit Type") # if lc, what lc type
     
-    def re_confirm(self):
 
+
+    def unlink(self):
+        for record in self:
+            if record.status != "draft":
+                raise UserError (_("You cannot delete a confirmed record"))
+            res = super(Pledge_pledge,self).unlink()
+            return res
+
+
+    def reset_draft(self):
+        self.status = "draft"
+
+
+    def re_confirm(self):
         self.status = "confirmed"
 
 
@@ -92,8 +107,8 @@ class Pledge_validity(models.Model):
     _name="pledge.extension"
 
     conn=fields.Integer()
-    issuing_date = fields.Date(string="Issuing date")
-    expiration_date = fields.Date(string="Expiration date")
+    issuing_date = fields.Date(string="Issuing date",required=True)
+    expiration_date = fields.Date(string="Expiration date",required=True)
     
 
 class PledgePartner(models.Model):

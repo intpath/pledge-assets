@@ -8,12 +8,13 @@
             <field name="arch" type="xml">
                 <xpath expr="//page[@name='internal_notes']" position="after">
                     <page name="pledges" string="Pledges">
-                    <field name="pledges_ids" readonly="1"  >
-                        <tree decoration-danger="status=='expired'" decoration-success="status=='confirmed'" delete="false" >
-                            <field name="name"/>
-                            <field name="lc_type"/>
-                            <field name="issuing_bank_name"/>
-                            <field name="status"/>
+                    <field name="pledges_ids" readonly="1" >
+                        <tree decoration-danger="status=='expired'" decoration-success="status=='confirmed'" decoration-info="status=='cleared'" delete="false" >
+                            <field name="name" />
+                            <field name="lc_type" />
+                            <field name="issuing_bank_name" />
+                            <field name="status" />
+                            <field name="notes" />
                         </tree>
                     </field>
                     </page>
