@@ -65,6 +65,14 @@ class Pledge_pledge(models.Model):
             'target': 'new',
             }
 
+    @api.model
+    def create(self,vals):
+        res = super(Pledge_pledge,self).create(vals)
+        if res.parent_pledge:
+            res.parent_pledge.status = "cleared"
+        return res
+            
+
     def reset_draft(self):
         self.status = "draft"
 
