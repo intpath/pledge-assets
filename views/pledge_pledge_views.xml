@@ -26,7 +26,9 @@
                     <field name="bid_ref" attrs="{'readonly': [('status', '!=', 'draft')],'invisible':[('lca_type', '!=', 'bid bond')]}"/>
                     <field name="payment_method" attrs="{'invisible': [('lca_type', '=', 'bid bond')],'readonly': [('status', '!=', 'draft')]}" />
                     <field name="issuing_bank_name" attrs="{'invisible': [('payment_method', '=', 'cash')],'readonly': [('status', '!=', 'draft')]}"  />
-                    <field name="amount" attrs="{'readonly': [('status', '!=', 'draft')]}"/>
+                    <field name="currency_id"/>
+                    <field name="amount" class="oe_inline" widget="monetary" options="{'currency_field': 'currency_id'}" attrs="{'readonly': [('status', '!=', 'draft')]}"/>
+                    <field name="paid_amount" class="oe_inline" widget="monetary" options="{'currency_field': 'currency_id'}" />
                     <field name="parent_pledge"/>
                    
                     

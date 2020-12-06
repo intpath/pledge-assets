@@ -28,8 +28,10 @@ class Pledge_pledge(models.Model):
     attachment_ids = fields.Many2many('ir.attachment', string='Attachments')
     name=fields.Char(store=True,compute="calc_name")
     lca_type = fields.Selection([('bid bond', 'Bid Bond'),('performance bond','Performance Bond'),('letter of credit','Letter of Credit')],string="Pledge Type") #main document type
-    payment_method = fields.Selection([('cash', 'Cash'),('bank','Bank')]) 
-    amount = fields.Float(string="Amount")
+    payment_method = fields.Selection([('cash', 'Cash'),('bank','Bank')])
+    currency_id = fields.Many2one('res.currency', string='Currency') 
+    amount = fields.Monetary(string="Amount")
+    paid_amount = fields.Monetary(string="Paid Amount")
     validity_lines = fields.One2many("pledge.extension","conn",string="Validity/Extension")
     lc_type =fields.Selection([('customer', 'Customer LC'),('vendor','Vendor LC')],string="Letter of Credit Type") # if lc, what lc type
     related_contract = fields.Many2one("contract.contract",string="Related Contract")
