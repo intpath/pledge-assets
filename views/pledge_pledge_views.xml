@@ -8,8 +8,10 @@
                 <field name="arch" type="xml">
                     <form>
                     <header>
+                        
                         <button name="confirm" type="object" string="Confirm" attrs="{'invisible': [('status', '!=', 'draft')]}" confirm="You will not be able to delete this record after confirmation"/>
                         <button name="reset_draft" type="object" string="Reset to draft" attrs="{'invisible': [('status', '!=', 'confirmed')]}" confirm="Are you sure you want to reset this record to draft "/>
+                        <button name="deduct" type="object" string="deduct" attrs="{'invisible': ['|',('status', '=', 'draft'),('status', '=', 'cleared')]}" confirm="You will be redirected to create a new pledge"/>
                         <button name="clear_lc" type="object" string="Clear" attrs="{'invisible': ['|',('status', '=', 'draft'),('status', '=', 'cleared')]}" confirm="Are you sure you want to clear this record"/>
                         <field name="status" widget="statusbar" statusbar_visible="draft,confirmed,expired,cleared"/>
                     </header>
@@ -18,12 +20,14 @@
                     <group>
                     <group>
                     <field name="partner_id" attrs="{'readonly': [('status', '!=', 'draft')]}"/>
-                    <field name="bid_ref" attrs="{'readonly': [('status', '!=', 'draft')]}"/>
                     <field name="lca_type" attrs="{'readonly': [('status', '!=', 'draft')]}"/>
                     <field name="lc_type" attrs="{'invisible': [('lca_type', '!=', 'letter of credit')],'readonly': [('status', '!=', 'draft')]}" />
+                    <field name="related_contract" attrs="{'invisible': [('lca_type', '=', 'bid bond')]}"/>                    
+                    <field name="bid_ref" attrs="{'readonly': [('status', '!=', 'draft')],'invisible':[('lca_type', '!=', 'bid bond')]}"/>
                     <field name="payment_method" attrs="{'invisible': [('lca_type', '=', 'bid bond')],'readonly': [('status', '!=', 'draft')]}" />
                     <field name="issuing_bank_name" attrs="{'invisible': [('payment_method', '=', 'cash')],'readonly': [('status', '!=', 'draft')]}"  />
                     <field name="amount" attrs="{'readonly': [('status', '!=', 'draft')]}"/>
+                    <field name="parent_pledge"/>
                    
                     
                     </group>
@@ -43,14 +47,23 @@
                     <group>
                     
                     </group>
-                    <field name="validity_lines" attrs="{'readonly': [('status', '=', 'cleared')]}" >
-                        <tree editable="top">
-                            <field name="issuing_date"/>
-                            <field name="expiration_date"/>
-
-                        </tree>
-
-                    </field>
+                    <notebook>
+                        <page name="validity_lines" string="Validity Lines">
+                        
+                        <field name="validity_lines" attrs="{'readonly': [('status', '=', 'cleared')]}" >
+                            <tree editable="top">
+                                <field name="issuing_date"/>
+                                <field name="expiration_date"/>
+                            </tree>
+                        </field>
+                        </page>
+                        <page name="clearance_info" string="Clearance Information" attrs="{'invisible': [('status', '=', 'draft')]}">
+                            <group>
+                                <field name="clearance_amount" attrs="{'readonly': [('status', '=', 'cleared')]}"/>
+                                <field name="clearance_attachement" attrs="{'readonly': [('status', '=', 'cleared')]}" />
+                            </group>
+                        </page>
+                    </notebook>
 
                     </group>
                     <field name="notes"/>
@@ -72,14 +85,17 @@
                 <field name="arch" type="xml">
                     <tree string="Tree View">
                     
-                    <field name="partner_id"/>
-                    <field name="bid_ref"/>
-                    <field name="issuing_bank_name"/>
-                    <field name="lca_type"/>
-                    <!-- <field name="alert_date"/> -->
-                    <field name="issuing_bank_ref"/>
-                    <field name="lc_type"/>
-                    <field name="amount"/>
+                        <field name="partner_id"/>
+                        
+                        <field name="bid_ref" />
+                        <field name="issuing_bank_name"/>
+                        <field name="lca_type"/>
+                        <!-- <field name="alert_date"/> -->
+                        <field name="issuing_bank_ref"/>
+                        <field name="lc_type"/>
+                        <field name="amount"/>
+                        <field name="parent_pledge"/>
+                        <field name="status"/>
 
                     </tree>
                 </field>

@@ -40,8 +40,6 @@
                 <field name="target">inline</field>
                 <field name="context">{'module' : 'pledge_assets'}</field>
             </record>
-
-
             <menuitem id="A_settings_menu" name="Configuration"
                     parent="base.menu_administration" action="notification_settings_action" web_icon="pledge_assets,static/description/icon.png"/>
 

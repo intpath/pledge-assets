@@ -32,7 +32,18 @@ class Pledge_pledge(models.Model):
     amount = fields.Float(string="Amount")
     validity_lines = fields.One2many("pledge.extension","conn",string="Validity/Extension")
     lc_type =fields.Selection([('customer', 'Customer LC'),('vendor','Vendor LC')],string="Letter of Credit Type") # if lc, what lc type
+    related_contract = fields.Many2one("contract.contract",string="Related Contract")
+    parent_pledge =fields.Many2one('pledge.pledge',string="Parent Pledge")
+
+    clearance_amount = fields.Integer(string="Clearance Amount")
+    clearance_attachement = fields.Binary(string='Attachments')
+
+
+
     
+
+
+
 
 
     def unlink(self):
@@ -42,6 +53,17 @@ class Pledge_pledge(models.Model):
             res = super(Pledge_pledge,self).unlink()
             return res
 
+
+    def deduct(self):
+        return {
+            'type': 'ir.actions.act_window',
+            'name': 'view_tree_label_picking',
+            'view_type': 'form',
+            'view_mode':'form',
+            'res_model': 'pledge.pledge', 
+            'context': {'default_parent_pledge':self.id},
+            'target': 'new',
+            }
 
     def reset_draft(self):
         self.status = "draft"
@@ -59,7 +81,10 @@ class Pledge_pledge(models.Model):
         self.status = "confirmed"
 
     def clear_lc(self):
-        self.status = "cleared"
+        if self.clearance_amount != 0 and self.clearance_attachement:
+            self.status = "cleared"
+        else:
+            raise UserError (_("Please fill out clearance amount and attach clearence document"))
 
     
     def proactive_expiration_notification(self):
@@ -115,4 +140,20 @@ class PledgePartner(models.Model):
 
     _inherit = "res.partner"
 
-    pledges_ids = fields.One2many("pledge.pledge","partner_id",string="Pledges")
+    pledge_count = fields.Integer("Pledges", compute='_compute_pledges')
+
+    def pledge_partner_re(self):
+      return {
+         "name": "Pledges",
+         "type": "ir.actions.act_window",
+         "res_model": "pledge.pledge",
+         "views": [[False, "list"],[False, "kanban"], [False, "form"], 
+            [False, "graph"], [False, "pivot"], [False, "activity"]],
+         "domain": [['partner_id', '=', self.id]],
+      }
+
+
+    def _compute_pledges(self):
+        for partner in self:
+            operator = 'child_of' if partner.is_company else '='  # the opportunity count should counts the opportunities of this company and all its contacts
+            partner.pledge_count = self.env['pledge.pledge'].search_count([('partner_id', operator, partner.id)])
