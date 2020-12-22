@@ -23,19 +23,22 @@ class Pledge_pledge(models.Model):
     ]
     status = fields.Selection(STATES, default=STATES[0][0],readonly=True)
     issuing_bank_name =fields.Many2one("pledge.bank",required=True)
-    issuing_bank_ref = fields.Char(string="Issuing Bank Reference")
+    issuing_bank_ref = fields.Char(string="LC Number")
     notes = fields.Text()
     attachment_ids = fields.Many2many('ir.attachment', string='Attachments')
     name=fields.Char(store=True,compute="calc_name")
     lca_type = fields.Selection([('bid bond', 'Bid Bond'),('performance bond','Performance Bond'),('letter of credit','Letter of Credit')],string="Pledge Type") #main document type
-    payment_method = fields.Selection([('cash', 'Cash'),('bank','Bank')])
+    payment_method = fields.Char(string="Payment Method")
     currency_id = fields.Many2one('res.currency', string='Currency') 
     amount = fields.Monetary(string="Amount")
     paid_amount = fields.Monetary(string="Paid Amount")
+    benefeciary_bank = fields.Many2one("pledge.bank",string="Benefeciary Bank")
     validity_lines = fields.One2many("pledge.extension","conn",string="Validity/Extension")
-    lc_type =fields.Selection([('customer', 'Customer LC'),('vendor','Vendor LC')],string="Letter of Credit Type") # if lc, what lc type
+    lc_type =fields.Selection([('irrevocable', 'Irrevocable'),('confirmed','Confirmed'),('transferable','Transferable')],string="Letter of Credit Type") # if lc, what lc type
     related_contract = fields.Many2one("contract.contract",string="Related Contract")
     parent_pledge =fields.Many2one('pledge.pledge',string="Parent Pledge")
+    latest_date_of_shipment = fields.Date(string="Latest date of shipment")
+    expense_lines = fields.One2many("pledge.expense","conn",string="Expense Lines")
 
     clearance_amount = fields.Integer(string="Clearance Amount")
     clearance_attachement = fields.Binary(string='Attachments')
@@ -167,3 +170,22 @@ class PledgePartner(models.Model):
         for partner in self:
             operator = 'child_of' if partner.is_company else '='  # the opportunity count should counts the opportunities of this company and all its contacts
             partner.pledge_count = self.env['pledge.pledge'].search_count([('partner_id', operator, partner.id)])
+
+
+class PledgeExpenses(models.Model):
+    _name="pledge.expense"
+
+    conn = fields.Integer()
+    name=fields.Many2one("pledge.expensenames",string="Expense Names")
+    amount = fields.Float(string="Amount")
+    currency = fields.Many2one("res.currency",string="Currency")
+
+
+
+
+
+class PledgeExpensesNames(models.Model):
+    _name="pledge.expensenames"
+    _rec_name = "name"
+
+    name = fields.Char(string="Expense Name")

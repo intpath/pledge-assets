@@ -59,6 +59,15 @@
                             </tree>
                         </field>
                         </page>
+                        <page name="expenses_tab" string="Expenses Information">
+                            <field name="expense_lines">
+                                    <tree editable="top">
+                                        <field name="name"/>
+                                        <field name="amount"/>
+                                        <field name="currency"/>
+                                    </tree>
+                            </field>
+                        </page>
                         <page name="clearance_info" string="Clearance Information" attrs="{'invisible': [('status', '=', 'draft')]}">
                             <group>
                                 <field name="clearance_amount" attrs="{'readonly': [('status', '=', 'cleared')]}"/>
@@ -91,11 +100,13 @@
                         
                         <field name="bid_ref" />
                         <field name="issuing_bank_name"/>
+                        <field name="benefeciary_bank"/>
                         <field name="lca_type"/>
                         <!-- <field name="alert_date"/> -->
                         <field name="issuing_bank_ref"/>
                         <field name="lc_type"/>
                         <field name="amount"/>
+                        <field name="latest_date_of_shipment"/>
                         <field name="parent_pledge"/>
                         <field name="status"/>
 

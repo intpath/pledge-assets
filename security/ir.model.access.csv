@@ -2,3 +2,7 @@ id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
 access_pledge_pledge,pledge_pledge,model_pledge_pledge,base.group_user,1,1,1,1
 access_pledge_bank,pledge_bank,model_pledge_bank,base.group_user,1,1,1,1
 access_pledge_extension,pledge_extension,model_pledge_extension,base.group_user,1,1,1,1
+access_pledge_expense,pledge_expense,model_pledge_expense,base.group_user,1,1,1,1
+access_pledge_expensenames,pledge_expensenames,model_pledge_expensenames,base.group_user,1,1,1,1
+
+
