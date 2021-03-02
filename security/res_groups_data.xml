@@ -1,0 +1,11 @@
+<odoo>
+    <data noupdate="1">
+
+        <record id="pledge_user" model="res.groups">
+            <field name="name">Pledge User</field>
+            <field name="category_id" ref="base.module_category_operations_documents" />
+            <field name="users" eval="[(4, 2)]" />
+        </record>
+
+    </data>
+</odoo>

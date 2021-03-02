@@ -16,37 +16,14 @@
       <field name="view_mode">tree,form</field>
     </record>
 
-    <!-- server action to the one above -->
-<!--
-    <record model="ir.actions.server" id="pledge_assets.action_server">
-      <field name="name">pledge_assets server</field>
-      <field name="model_id" ref="model_pledge_assets_pledge_assets"/>
-      <field name="state">code</field>
-      <field name="code">
-        action = {
-          "type": "ir.actions.act_window",
-          "view_mode": "tree,form",
-          "res_model": model._name,
-        }
-      </field>
-    </record>
--->
 
     <!-- Top menu item -->
-
-    <menuitem name="Pledges" id="pledge_assets.menu_root" web_icon="pledge_assets,static/description/icon.png" action="pledge_assets.pledge_window"/>
+    <menuitem name="Pledges" id="pledge_assets.menu_root" web_icon="pledge_assets,static/description/icon.png" action="pledge_assets.pledge_window" groups="pledge_assets.pledge_user"/>
 
     <!-- menu categories -->
 
     <!-- <menuitem name="LC Bank menu" id="pledge_assets.menu_1" parent="pledge_assets.menu_root" action="pledge.pledge_window"/> -->
-    <menuitem name="Banks" id="pledge_assets.bank_menu" parent="pledge_assets.menu_root" action="pledge_assets.bank_window"/>
+    <menuitem name="Banks" id="pledge_assets.bank_menu" parent="pledge_assets.menu_root" action="pledge_assets.bank_window" groups="pledge_assets.pledge_user"/>
 
-    <!-- actions -->
-<!--
-    <menuitem name="List" id="pledge_assets.menu_1_list" parent="pledge_assets.menu_1"
-              action="pledge_assets.action_window"/>
-    <menuitem name="Server to list" id="pledge_assets" parent="pledge_assets.menu_2"
-              action="pledge_assets.action_server"/>
--->
   </data>
 </odoo>
