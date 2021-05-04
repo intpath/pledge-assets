@@ -153,7 +153,7 @@ class PledgePartner(models.Model):
 
     _inherit = "res.partner"
 
-    pledge_count = fields.Integer("Pledges", compute='_compute_pledges')
+    pledge_count = fields.Integer("Pledges", compute='_compute_pledges', groups="pledge_assets.pledge_user")
 
     def pledge_partner_re(self):
       return {
