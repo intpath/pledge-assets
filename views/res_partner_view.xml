@@ -8,9 +8,10 @@
             <field name="arch" type="xml">
                 <xpath expr="//div[@name='button_box']" position="inside">
                     <button class="oe_stat_button o_res_partner_tip_opp" type="object"
+                        string="Partner Pledges"
                         name="pledge_partner_re"
                         icon="fa-book"
-                        groups="">
+                        groups="pledge_assets.pledge_user">
                         <field name="pledge_count" widget="statinfo"/>
                     </button>
                  
