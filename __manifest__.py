@@ -16,7 +16,7 @@
     'application':True,
 
     # any module necessary for this one to work correctly
-    'depends': ['base','mail','contacts'],
+    'depends': ['base', 'mail', 'contacts'],
 
     # always loaded
     'data': [
@@ -26,6 +26,7 @@
         'views/pledge_pledge_views.xml',
         'views/pledge_bank_views.xml',
         'views/res_partner_view.xml',
-        'views/res_config_view.xml'
+        'views/res_config_view.xml',
+        'views/pledge_expiration_notification_action.xml',
     ],
 }

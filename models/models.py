@@ -11,7 +11,7 @@ class Pledge_pledge(models.Model):
     _rec_name = "name"
     _inherit='mail.thread'
 
-    
+
     partner_id = fields.Many2one("res.partner",string="Partner/Customer",required=True,readonly=False)
     bid_ref = fields.Char(string="Bid Reference")
     # alert_date = fields.Date(string="Alert date")
@@ -44,20 +44,12 @@ class Pledge_pledge(models.Model):
     clearance_attachement = fields.Binary(string='Attachments')
 
 
-
-    
-
-
-
-
-
     def unlink(self):
         for record in self:
             if record.status != "draft":
                 raise UserError (_("You cannot delete a confirmed record"))
             res = super(Pledge_pledge,self).unlink()
             return res
-
 
     def deduct(self):
         return {
@@ -76,15 +68,12 @@ class Pledge_pledge(models.Model):
         if res.parent_pledge:
             res.parent_pledge.status = "cleared"
         return res
-            
 
     def reset_draft(self):
         self.status = "draft"
 
-
     def re_confirm(self):
         self.status = "confirmed"
-
 
     @api.constrains("partner_id","issuing_bank_name")
     def calc_name(self):
@@ -99,49 +88,45 @@ class Pledge_pledge(models.Model):
         else:
             raise UserError (_("Please fill out clearance amount and attach clearence document"))
 
-    
+    # Scheduled Action function
     def proactive_expiration_notification(self):
         today = datetime.date.today()
         pt = int(self.env['ir.config_parameter'].sudo().get_param('pledge_assets.pt') )
-        pledges = self.env["pledge.pledge"].search([("status","=",'confirmed')])
+        pledges = self.env["pledge.pledge"].search([("status", "=", 'confirmed')])
         for pledge in pledges:
             try:
                 for validity_line in pledge.validity_lines[0]:
                     delta = ( validity_line.expiration_date - today )
                     if delta.days <= pt and delta.days > 0:
-                        self.notify(rec_id=pledge.id,rec_name=pledge.name,status="about to expire")
+                        self.notify(rec_id=pledge.id, rec_name=pledge.name, status="about to expire")
                     elif delta.days <= 0:
-                        self.notify(rec_id=pledge.id,rec_name=pledge.name,status="expired")
+                        self.notify(rec_id=pledge.id, rec_name=pledge.name, status="expired")
                         pledge.status="expired"
-
             except Exception as e:
                 self.notify(rec_id=pledge.id,rec_name=pledge.name,status=str(e))
 
 
-
     def notify(self,rec_id="",rec_name="",status=""): #takes in record_id and record_name
-        try:
-            channel_id = self.env['mail.channel'].search([('name', '=', 'PledgesNotification')])
-            
-            notification = ('<div class="pledge.pledge"><a href="#" class="o_redirect" data-oe-model = "pledge.pledge" data-oe-id="%s">#%s</a></div>') % (rec_id, rec_name,)
-            channel_id.message_post(
-                        body='Automated Message :Pledge is '+ status + " " +notification ,
-                        subtype='mail.mt_comment')
-        except:
-            raise UserError(_("Unable to send Notification,Please check channel Name"))    
+        channel_id = self.env['mail.channel'].search([('name', '=', 'PledgesNotification')])
 
+        if not channel_id:
+            channel_id = self.env['mail.channel'].create({
+                'name': 'PledgesNotification',
+            })
+        
+        notification = ('<div class="pledge.pledge"><a href="#" class="o_redirect" data-oe-model = "pledge.pledge" data-oe-id="%s">#%s</a></div>') % (rec_id, rec_name,)
+        channel_id.message_post(
+            body='Automated Message :Pledge is '+ status + " " +notification,
+            subtype='mail.mt_comment')
 
 
 class Pledge_bank(models.Model):
     _name="pledge.bank"
     _rec_name = 'bank_name'
     bank_name = fields.Char(string="Issuing bank name")
-    
-
 
 
 class Pledge_validity(models.Model):
-
     _name="pledge.extension"
 
     conn=fields.Integer()
@@ -150,20 +135,19 @@ class Pledge_validity(models.Model):
     
 
 class PledgePartner(models.Model):
-
     _inherit = "res.partner"
 
     pledge_count = fields.Integer("Pledges", compute='_compute_pledges', groups="pledge_assets.pledge_user")
 
     def pledge_partner_re(self):
-      return {
-         "name": "Pledges",
-         "type": "ir.actions.act_window",
-         "res_model": "pledge.pledge",
-         "views": [[False, "list"],[False, "kanban"], [False, "form"], 
+        return {
+            "name": "Pledges",
+            "type": "ir.actions.act_window",
+            "res_model": "pledge.pledge",
+            "views": [[False, "list"],[False, "kanban"], [False, "form"], 
             [False, "graph"], [False, "pivot"], [False, "activity"]],
-         "domain": [['partner_id', '=', self.id]],
-      }
+            "domain": [['partner_id', '=', self.id]],
+        }
 
 
     def _compute_pledges(self):
@@ -179,9 +163,6 @@ class PledgeExpenses(models.Model):
     name=fields.Many2one("pledge.expensenames",string="Expense Names")
     amount = fields.Float(string="Amount")
     currency = fields.Many2one("res.currency",string="Currency")
-
-
-
 
 
 class PledgeExpensesNames(models.Model):
