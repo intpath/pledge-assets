@@ -95,13 +95,14 @@ class Pledge_pledge(models.Model):
         pledges = self.env["pledge.pledge"].search([("status", "=", 'confirmed')])
         for pledge in pledges:
             try:
-                for validity_line in pledge.validity_lines[0]:
-                    delta = ( validity_line.expiration_date - today )
-                    if delta.days <= pt and delta.days > 0:
-                        self.notify(rec_id=pledge.id, rec_name=pledge.name, status="about to expire")
-                    elif delta.days <= 0:
-                        self.notify(rec_id=pledge.id, rec_name=pledge.name, status="expired")
-                        pledge.status="expired"
+                if pledge.validity_lines:
+                    for validity_line in pledge.validity_lines[0]:
+                        delta = ( validity_line.expiration_date - today )
+                        if delta.days <= pt and delta.days > 0:
+                            self.notify(rec_id=pledge.id, rec_name=pledge.name, status="about to expire")
+                        elif delta.days <= 0:
+                            self.notify(rec_id=pledge.id, rec_name=pledge.name, status="expired")
+                            pledge.status="expired"
             except Exception as e:
                 self.notify(rec_id=pledge.id,rec_name=pledge.name,status=str(e))
 
