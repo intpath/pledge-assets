@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 {
-    'name': "Pledges",
+    'name': "",
 
     'summary': """
         For Creating & Managing Pledges""",

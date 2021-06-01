@@ -99,15 +99,15 @@ class Pledge_pledge(models.Model):
                     for validity_line in pledge.validity_lines[0]:
                         delta = ( validity_line.expiration_date - today )
                         if delta.days <= pt and delta.days > 0:
-                            self.notify(rec_id=pledge.id, rec_name=pledge.name, status="about to expire")
+                            self.notify(record=pledge, status="about to expire")
                         elif delta.days <= 0:
-                            self.notify(rec_id=pledge.id, rec_name=pledge.name, status="expired")
+                            self.notify(record=pledge, status="expired")
                             pledge.status="expired"
             except Exception as e:
-                self.notify(rec_id=pledge.id,rec_name=pledge.name,status=str(e))
+                self.notify(record=pledge, status=str(e))
 
 
-    def notify(self,rec_id="",rec_name="",status=""): #takes in record_id and record_name
+    def notify(self, record, status):
         channel_id = self.env['mail.channel'].search([('name', '=', 'PledgesNotification')])
 
         if not channel_id:
@@ -115,10 +115,14 @@ class Pledge_pledge(models.Model):
                 'name': 'PledgesNotification',
             })
         
-        notification = ('<div class="pledge.pledge"><a href="#" class="o_redirect" data-oe-model = "pledge.pledge" data-oe-id="%s">#%s</a></div>') % (rec_id, rec_name,)
+        notification = (
+            '<div class="pledge.pledge"><a href="#" class="o_redirect" data-oe-model = "pledge.pledge" data-oe-id="%i">%s</a></div>') % (record.id, record.name)
+        
         channel_id.message_post(
-            body='Automated Message :Pledge is '+ status + " " +notification,
-            subtype='mail.mt_comment')
+            body='Automated Message :Pledge is '+ status + ' ' + notification,
+            message_type='comment',
+            subtype_id=self.env.ref('mail.mt_comment').id,
+            partner_ids=[partner_id.id for partner_id in channel_id.channel_partner_ids])
 
 
 class Pledge_bank(models.Model):
