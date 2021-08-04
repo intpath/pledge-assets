@@ -133,7 +133,8 @@ class Pledge_bank(models.Model):
 
 class Pledge_validity(models.Model):
     _name="pledge.extension"
-
+    _order="expiration_date desc"
+    
     conn=fields.Integer()
     issuing_date = fields.Date(string="Issuing date",required=True)
     expiration_date = fields.Date(string="Expiration date",required=True)
